@@ -11,14 +11,22 @@ public class CameraController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Calculate the inital offset between the camera and the player
-        offset = transform.position - player.transform.position;
-    }
+        if (player != null)
+        {
+            // Calculate the inital offset between the camera and the player
+            offset = transform.position - player.transform.position;
+        }
+        }
+        
 
     //  // LateUpdate is called once per frame after all Update functions have been completed.
     void LateUpdate()
     {
-        // Maintain the same offset between the camera and player throughout the game.
-        transform.position = player.transform.position + offset;
+        if (player != null)
+        {
+            // Maintain the same offset between the camera and player throughout the game.
+            transform.position = player.transform.position + offset;
+        }
+    
     }
 }
