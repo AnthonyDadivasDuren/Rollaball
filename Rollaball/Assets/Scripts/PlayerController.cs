@@ -21,6 +21,9 @@ public class PlayerController : MonoBehaviour
     public float dashCooldown = 1.0f;
 
     public EnemySpawner enemySpawner;
+    public PickupSpawner pickupSpawner;
+    
+    public int winCondition = 12;
     
     // Rigid Body of the player 
     private Rigidbody rb;
@@ -92,6 +95,12 @@ public class PlayerController : MonoBehaviour
             // Increment the count of "PickUp" objects collected.
             count = count + 1;
             
+            // Spawn new pickup
+            if (pickupSpawner != null)
+            {
+                pickupSpawner.SpawnPickup();
+            }
+            
             // Update the count display.
             SetCountText();
         }
@@ -105,11 +114,15 @@ public class PlayerController : MonoBehaviour
         countText.text = "Count: " + count.ToString();
         
         // Check if the count has reached or exceeded the win condition.
-        if (count >= 12)
+        if (count >= winCondition)
         {
             // Display the win text.
             winTextGameObject.SetActive(true);
             DestroyAllEnemies();
+            if (pickupSpawner != null)
+            {
+                pickupSpawner.StopSpawning();
+            }
         }
     }
 
