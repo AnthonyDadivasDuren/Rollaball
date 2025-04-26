@@ -117,11 +117,20 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            //Destroy the current object
-            Destroy(gameObject);
-            // Update winText to display "You Lose"
-            winTextGameObject.SetActive(true);
-            winTextGameObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
+            if (isDashing)
+            {
+                //Destroys enemy while dashing
+                Destroy(collision.gameObject);
+            }
+            else
+            {
+                //Destroy the current object
+                Destroy(gameObject);
+                // Update winText to display "You Lose"
+                winTextGameObject.SetActive(true);
+                winTextGameObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
+                
+            }
         }
     }
 
