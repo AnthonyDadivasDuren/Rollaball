@@ -18,6 +18,8 @@ public class EnemySpawner : MonoBehaviour
     // Boundaries for random spawn position
     public float spawnRangeX = 10.0f;
     public float spawnHeightZ = 10.0f;
+
+    public int maxEnemies = 5;
     
     
     private bool isSpawnEnabled = true;
@@ -35,7 +37,18 @@ public class EnemySpawner : MonoBehaviour
         if (!isSpawnEnabled) return;
         
         spawnTimer -= Time.deltaTime;
-
+        
+        // Count current enemies
+        GameObject[] currentEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+        
+        // stops code from running if max enemies is reached
+        if (currentEnemies.Length >= maxEnemies + 1)
+        {
+            // Reset timer if at max enemies to maintain spawn rate when an enemy is destroyed
+            spawnTimer = spawnInterval;
+            return;
+        }
+        
         if (spawnTimer <= 0)
         {
             SpawnEnemy();
