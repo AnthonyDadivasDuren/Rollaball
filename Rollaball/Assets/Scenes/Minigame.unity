@@ -475,6 +475,9 @@ MonoBehaviour:
   Speed: 10
   countText: {fileID: 1432416465}
   winTextGameObject: {fileID: 1535057498}
+  dashSpeed: 15
+  dashDuration: 0.2
+  dashCooldown: 1
 --- !u!114 &220579243
 MonoBehaviour:
   m_ObjectHideFlags: 0

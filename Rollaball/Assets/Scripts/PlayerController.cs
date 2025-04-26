@@ -23,7 +23,16 @@ public class PlayerController : MonoBehaviour
     // Movement along X and Y axis
     private float movementX;
     private float movementY;
-  
+    
+    //variables for the dash system
+    public float dashSpeed = 10.0f;
+    public float dashDuration = 0.2f;
+    public float dashCooldown = 1.0f;
+    
+    private bool canDash = true;
+    private bool isDashing = false;
+    private float dashTimer;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -54,13 +63,19 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // Create a 3D movement vector using the x and y input values
-        Vector3 movement = new Vector3(movementX, 0.0f, movementY);
+        //stops regular movement while dashing
+        if (isDashing)
+        {
+            HandleDash();
+        }
+        else
+        {
+            // Create a 3D movement vector using the x and y input values
+            Vector3 movement = new Vector3(movementX, 0.0f, movementY);
         
-        // Apply force to the Rigid Body to move the player
-        rb.AddForce(movement * Speed);
-
-     
+            // Apply force to the Rigid Body to move the player
+            rb.AddForce(movement * Speed);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -106,6 +121,54 @@ public class PlayerController : MonoBehaviour
             winTextGameObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
         }
     }
-    
 
+    private void OnDash(InputValue value)
+    {
+        //only allow dashing if not already dashing or there is no dash cooldown
+        if (canDash && !isDashing)
+        {
+            StartDash();
+        }
+    }
+    
+    private void StartDash()
+    {
+        isDashing = true;
+        canDash = false;
+        dashTimer = dashDuration;
+        
+        //Get the players direction to calculate the dash direction 
+        Vector3 dashDirection = new Vector3(movementX, 0.0f, movementY);
+    
+        //if there is no input then dash in the players direction
+        if (dashDirection == Vector3.zero)
+        {
+            dashDirection  = transform.forward; //default to forward
+        }
+        
+        // apply dash force
+        rb.linearVelocity = dashDirection * dashSpeed;
+    }
+
+    private void HandleDash()
+    {
+        // decrease remaining dash time
+        dashTimer -= Time.fixedDeltaTime;
+        
+        //check if dash should stop
+        if (dashTimer <= 0)
+        {
+            isDashing = false;
+            rb.linearVelocity = Vector3.zero; //stops dash movement
+            StartCoroutine(DashCooldown());
+        }
+    }
+    
+    private IEnumerator DashCooldown()
+    {
+        // wait for cooldown period
+        yield return new WaitForSeconds(dashCooldown);
+        //allow dash again
+        canDash = true;
+    }
 }
