@@ -8,6 +8,7 @@ public class EnemyMovement : MonoBehaviour
     
     // Reference to the NavMeshAgent component for pathfinding.
     private NavMeshAgent navMeshAgent;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -19,7 +20,7 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
         // If there's a reference to the player...
-        if (player != null)
+        if (player != null && navMeshAgent.isActiveAndEnabled)
         {
             // Set the enemy's destination to the player's current position.
             navMeshAgent.SetDestination(player.position);

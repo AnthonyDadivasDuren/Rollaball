@@ -15,6 +15,13 @@ public class PlayerController : MonoBehaviour
     // UI object to display winning text.
     public GameObject winTextGameObject;
     
+    //variables for the dash system
+    public float dashSpeed = 10.0f;
+    public float dashDuration = 0.2f;
+    public float dashCooldown = 1.0f;
+
+    public EnemySpawner enemySpawner;
+    
     // Rigid Body of the player 
     private Rigidbody rb;
     
@@ -24,11 +31,7 @@ public class PlayerController : MonoBehaviour
     private float movementX;
     private float movementY;
     
-    //variables for the dash system
-    public float dashSpeed = 10.0f;
-    public float dashDuration = 0.2f;
-    public float dashCooldown = 1.0f;
-    
+  
     private bool canDash = true;
     private bool isDashing = false;
     private float dashTimer;
@@ -106,7 +109,7 @@ public class PlayerController : MonoBehaviour
         {
             // Display the win text.
             winTextGameObject.SetActive(true);
-            Destroy(GameObject.FindGameObjectWithTag("Enemy"));
+            DestroyAllEnemies();
         }
     }
 
@@ -170,5 +173,23 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown);
         //allow dash again
         canDash = true;
+    }
+
+    void DestroyAllEnemies()
+    {
+        // Find and destroy all enemies 
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        
+        foreach (GameObject enemy in enemies)
+        {
+            Destroy(enemy);
+        }
+        
+        //stop the spawner 
+        if (enemySpawner != null)
+        {
+            enemySpawner.StopSpawning();
+        }
+        
     }
 }
