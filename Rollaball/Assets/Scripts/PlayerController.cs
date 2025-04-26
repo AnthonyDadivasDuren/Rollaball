@@ -91,6 +91,19 @@ public class PlayerController : MonoBehaviour
         {
             // Display the win text.
             winTextGameObject.SetActive(true);
+            Destroy(GameObject.FindGameObjectWithTag("Enemy"));
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            //Destroy the current object
+            Destroy(gameObject);
+            // Update winText to display "You Lose"
+            winTextGameObject.SetActive(true);
+            winTextGameObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
         }
     }
     
