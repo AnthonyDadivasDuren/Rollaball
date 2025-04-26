@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private bool isDashing = false;
     private float dashTimer;
     
+    private Timer timer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -53,6 +54,10 @@ public class PlayerController : MonoBehaviour
         
         // Initially set the win text to be inactive.
         winTextGameObject.SetActive(false);
+        
+        
+        timer = FindFirstObjectByType<Timer>();
+
     }
     
     // This function is called when a move input is detected.
@@ -123,6 +128,12 @@ public class PlayerController : MonoBehaviour
             {
                 pickupSpawner.StopSpawning();
             }
+            
+            Timer timer = FindFirstObjectByType<Timer>();
+            if (timer != null)
+            {
+                timer.StopTimer();
+            }
         }
     }
 
@@ -139,6 +150,14 @@ public class PlayerController : MonoBehaviour
             {
                 //Destroy the current object
                 Destroy(gameObject);
+                
+                // Stop the timer
+                if (timer != null)
+                {
+                    timer.StopTimer();
+                }
+
+
                 // Update winText to display "You Lose"
                 winTextGameObject.SetActive(true);
                 winTextGameObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
@@ -214,4 +233,27 @@ public class PlayerController : MonoBehaviour
         }
         
     }
+    
+    public void GameOver()
+    {
+        //Destroy the current object
+        Destroy(gameObject);
+    
+        // Stop enemy spawning
+        if (enemySpawner != null)
+        {
+            enemySpawner.StopSpawning();
+        }
+    
+        // Stop pickup spawning
+        if (pickupSpawner != null)
+        {
+            pickupSpawner.StopSpawning();
+        }
+
+        // Update winText to display "Game Over!"
+        winTextGameObject.SetActive(true);
+        winTextGameObject.GetComponent<TextMeshProUGUI>().text = "Game Over!";
+    }
+
 }
